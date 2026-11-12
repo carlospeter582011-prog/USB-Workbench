@@ -1,6 +1,6 @@
 # USB Workbench
 
-Native Android USB workshop: Java app, offline JavaScript/HTML/CSS interface and C/C++ filesystem/archive engines. English/Arabic, RTL, Android6/API23 through target36. Users supply their own OS/images; none are bundled.
+Native Android USB workshop: Java app, offline JavaScript/HTML/CSS interface and C/C++ filesystem/archive engines. English/Arabic, RTL, Android 6 and newer (minSdk 23, targetSdk 36), built with Android SDK 37.2. Users supply their own OS/images; none are bundled.
 
 ## Automatic builds
 
