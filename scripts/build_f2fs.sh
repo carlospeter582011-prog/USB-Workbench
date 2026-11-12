@@ -6,7 +6,10 @@ usb_f2fs_root="$PWD"
 python3 - <<'PY'
 from pathlib import Path
 import tarfile,hashlib
-archive=Path('native/sources/f2fs-tools.tar.gz');assert hashlib.sha256(archive.read_bytes()).hexdigest()=='772879c0a7970575327c03c973cec7a114633174c5804d7f76d2959bc17151b4'
+archive=Path('native/sources/f2fs-tools.tar.gz')
+import json
+from ci.source_integrity import verify
+verify(archive,next(x for x in json.loads(Path('ci/dependencies.json').read_text()) if x['file']==str(archive)))
 root=Path('.downloads/native-src/f2fs-tools-1.17.0')
 if not (root/'VERSION').is_file():
  root.mkdir(parents=True,exist_ok=True)

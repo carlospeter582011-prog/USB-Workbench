@@ -12,8 +12,9 @@ def fetch(url,dst,digest=None,algorithm='sha256'):
  return dst
 (R/'artifacts').mkdir(exist_ok=True);(R/'.downloads/native-src').mkdir(parents=True,exist_ok=True)
 for entry in json.loads((R/'ci/dependencies.json').read_text()):
- path=fetch(entry['url'],R/entry['file'],entry['sha256'])
- assert path.stat().st_size==entry['bytes'],path
+ path=fetch(entry['url'],R/entry['file'])
+ from source_integrity import verify
+ verify(path,entry)
  if path.parent.name=='sources' and path.name!='f2fs-tools.tar.gz':
   with tarfile.open(path) as t:t.extractall(R/'.downloads/native-src',filter='data')
 for name,spec in json.loads((R/'tools/ui-toolchain.json').read_text()).items():

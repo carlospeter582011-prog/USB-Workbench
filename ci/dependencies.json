@@ -33,7 +33,8 @@
     "file": "native/sources/f2fs-tools.tar.gz",
     "url": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools/+archive/83fd39a184df96db5def895ddc55bf68e720ef76.tar.gz",
     "sha256": "772879c0a7970575327c03c973cec7a114633174c5804d7f76d2959bc17151b4",
-    "bytes": 307238
+    "bytes": 307238,
+    "treeSha256": "a8b05c9a337c1624e7208ee0ae8f5451d4ff91bfface7f87697def2dac70dc00"
   },
   {
     "file": "native/sources/hfsprogs.tar.gz",
