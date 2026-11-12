@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
                 new AlertDialog.Builder(MainActivity.this).setMessage(message).setPositiveButton(tr("Continue","متابعة"),(d,w)->result.confirm()).setNegativeButton(tr("Cancel","إلغاء"),(d,w)->result.cancel()).setOnCancelListener(d->result.cancel()).show();return true;
             }
         });
-        if(Build.VERSION.SDK_INT>=33){backCallback=()->web.evaluateJavascript("window.appBack && appBack()",null);getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,backCallback);}
+        if(Build.VERSION.SDK_INT>=33){backCallback=this::handleBack;getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,backCallback);}
         web.addJavascriptInterface(new Bridge(),"Native");web.loadUrl("file:///android_asset/index.html");
         IntentFilter permission=new IntentFilter(USB_PERMISSION);if(Build.VERSION.SDK_INT>=33)registerReceiver(receiver,permission,Context.RECEIVER_NOT_EXPORTED);else registerReceiver(receiver,permission,getPackageName()+".INTERNAL_USB",null);
         IntentFilter detach=new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED);if(Build.VERSION.SDK_INT>=33)registerReceiver(detachReceiver,detach,Context.RECEIVER_NOT_EXPORTED);else registerReceiver(detachReceiver,detach);
@@ -63,7 +63,10 @@ public class MainActivity extends Activity {
     }
     private final BroadcastReceiver detachReceiver=new BroadcastReceiver(){public void onReceive(Context c,Intent i){receiver.onReceive(c,i);}};
     @Override protected void onDestroy(){if(Build.VERSION.SDK_INT>=33 && backCallback!=null)getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backCallback);unregisterReceiver(receiver);unregisterReceiver(detachReceiver);web.removeJavascriptInterface("Native");web.destroy();super.onDestroy();}
-    @Override public void onBackPressed(){web.evaluateJavascript("window.appBack && appBack()",null);}
+    // API 33+ routes system back through the OnBackInvokedCallback registered above.
+    @android.annotation.SuppressLint("GestureBackNavigation")
+    @Override public void onBackPressed(){handleBack();}
+    private void handleBack(){web.evaluateJavascript("window.appBack && appBack()",null);}
     private String tr(String en,String ar){return app.tr(en,ar);}
     private void failure(Exception e){app.error=e.getMessage()==null?"UNKNOWN":e.getMessage();}
     private void picker(Intent intent,int request){
