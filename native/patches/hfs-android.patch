@@ -1,0 +1,185 @@
+--- a/newfs_hfs.tproj/makehfs.c
++++ b/newfs_hfs.tproj/makehfs.c
+@@ -38,7 +38,9 @@
+ #endif
+ #include <sys/errno.h>
+ #include <sys/stat.h>
++#if !LINUX
+ #include <sys/sysctl.h>
++#endif
+ #if !LINUX
+ #include <sys/vmmeter.h>
+ #endif
+@@ -76,7 +78,7 @@
+ 
+ extern Boolean _CFStringGetFileSystemRepresentation(CFStringRef string, UInt8 *buffer, CFIndex maxBufLen);
+ #else
+-#include <openssl/sha.h>
++
+ #endif
+ 
+ #include <hfs/hfs_format.h>
+@@ -1576,94 +1578,9 @@
+ 
+ 
+ /* Generate Volume UUID - similar to code existing in hfs_util */
++/* USB Workbench Android port: use OS entropy instead of weak SHA1 clock/load seeds. */
+ void GenerateVolumeUUID(VolumeUUID *newVolumeID) {
+-	SHA_CTX context;
+-	char randomInputBuffer[26];
+-	unsigned char digest[20];
+-	time_t now;
+-	clock_t uptime;
+-	size_t datalen;
+-	double sysloadavg[3];
+-#if !LINUX
+-	int sysdata;
+-	int mib[2];
+-	char sysctlstring[128];
+-	struct vmtotal sysvmtotal;
+-#endif
+-	
+-	do {
+-		/* Initialize the SHA-1 context for processing: */
+-		SHA1_Init(&context);
+-		
+-		/* Now process successive bits of "random" input to seed the process: */
+-		
+-		/* The current system's uptime: */
+-		uptime = clock();
+-		SHA1_Update(&context, &uptime, sizeof(uptime));
+-		
+-		/* The kernel's boot time: */
+-#if !LINUX
+-		mib[0] = CTL_KERN;
+-		mib[1] = KERN_BOOTTIME;
+-		datalen = sizeof(sysdata);
+-		sysctl(mib, 2, &sysdata, &datalen, NULL, 0);
+-		SHA1_Update(&context, &sysdata, datalen);
+-#endif
+-		/* The system's host id: */
+-#if !LINUX
+-		mib[0] = CTL_KERN;
+-		mib[1] = KERN_HOSTID;
+-		datalen = sizeof(sysdata);
+-		sysctl(mib, 2, &sysdata, &datalen, NULL, 0);
+-		SHA1_Update(&context, &sysdata, datalen);
+-#endif
+-		/* The system's host name: */
+-#if !LINUX
+-		mib[0] = CTL_KERN;
+-		mib[1] = KERN_HOSTNAME;
+-		datalen = sizeof(sysctlstring);
+-		sysctl(mib, 2, sysctlstring, &datalen, NULL, 0);
+-		SHA1_Update(&context, sysctlstring, datalen);
+-#endif
+-		/* The running kernel's OS release string: */
+-#if !LINUX
+-		mib[0] = CTL_KERN;
+-		mib[1] = KERN_OSRELEASE;
+-		datalen = sizeof(sysctlstring);
+-		sysctl(mib, 2, sysctlstring, &datalen, NULL, 0);
+-		SHA1_Update(&context, sysctlstring, datalen);
+-#endif
+-		/* The running kernel's version string: */
+-#if !LINUX
+-		mib[0] = CTL_KERN;
+-		mib[1] = KERN_VERSION;
+-		datalen = sizeof(sysctlstring);
+-		sysctl(mib, 2, sysctlstring, &datalen, NULL, 0);
+-		SHA1_Update(&context, sysctlstring, datalen);
+-#endif
+-		/* The system's load average: */
+-		datalen = sizeof(sysloadavg);
+-		getloadavg(sysloadavg, 3);
+-		SHA1_Update(&context, &sysloadavg, datalen);
+-
+-		/* The system's VM statistics: */
+-#if !LINUX
+-		mib[0] = CTL_VM;
+-		mib[1] = VM_METER;
+-		datalen = sizeof(sysvmtotal);
+-		sysctl(mib, 2, &sysvmtotal, &datalen, NULL, 0);
+-		SHA1_Update(&context, &sysvmtotal, datalen);
+-#endif
+-		/* The current GMT (26 ASCII characters): */
+-		time(&now);
+-		strncpy(randomInputBuffer, asctime(gmtime(&now)), 26);	/* "Mon Mar 27 13:46:26 2000" */
+-		SHA1_Update(&context, randomInputBuffer, 26);
+-		
+-		/* Pad the accumulated input and extract the final digest hash: */
+-		SHA1_Final(digest, &context);
+-	
+-		memcpy(newVolumeID, digest, sizeof(*newVolumeID));
+-	} while ((newVolumeID->v.high == 0) || (newVolumeID->v.low == 0));
+-}
+-
+-
++ int fd=open("/dev/urandom",O_RDONLY);if(fd<0)err(1,"HFS random UUID");
++ do {size_t at=0;while(at<sizeof(*newVolumeID)){ssize_t n=read(fd,(char*)newVolumeID+at,sizeof(*newVolumeID)-at);if(n<0&&errno==EINTR)continue;if(n<=0)err(1,"HFS random UUID");at+=n;}}while(!newVolumeID->v.high||!newVolumeID->v.low);
++ close(fd);
++}
+--- a/fsck_hfs.tproj/fsck_hfs.c
++++ b/fsck_hfs.tproj/fsck_hfs.c
+@@ -30,7 +30,9 @@
+ #include <sys/ioctl.h>
+ #if !LINUX
+ #include <sys/disk.h>
++#if !LINUX
+ #include <sys/sysctl.h>
++#endif
+ #include <setjmp.h>
+ #endif
+ #include <hfs/hfs_mount.h>
+--- a/fsck_hfs.tproj/utilities.c
++++ b/fsck_hfs.tproj/utilities.c
+@@ -70,7 +70,9 @@
+ #include <string.h>
+ #include <unistd.h> 
+ #include <stdlib.h>
++#if !LINUX
+ #include <sys/sysctl.h>
++#endif
+ 
+ #include "fsck_hfs.h"
+ 
+@@ -298,6 +300,7 @@
+ // prototype
+ void print_to_mem(int type, const char *fmt, const char *str, va_list ap);
+ 
++static void usbwb_print_str(int type,const char *fmt,const char *str,...){va_list ap;va_start(ap,str);print_to_mem(type,fmt,str,ap);va_end(ap);}
+ #define  DO_VPRINT   1    // types for print_to_mem
+ #define  DO_STR      2
+ 
+@@ -547,8 +550,8 @@
+ 		cur_in_mem = in_mem_log;
+ 
+ 		t = time(NULL);
+-		print_to_mem(DO_STR, "\n%s: ", cdevname ? cdevname : "UNKNOWN-DEV", NULL); 
+-		print_to_mem(DO_STR, "fsck_hfs run at %s", ctime(&t), NULL);
++		usbwb_print_str(DO_STR, "\n%s: ", cdevname ? cdevname : "UNKNOWN-DEV", NULL); 
++		usbwb_print_str(DO_STR, "fsck_hfs run at %s", ctime(&t), NULL);
+ 
+ 		if (live_fsck && log_file) {
+ 		    pthread_cond_init(&mem_buf_cond, NULL);
+@@ -670,7 +673,7 @@
+ 	LOG_PREFIX;				\
+ 	fprintf(log_file, fmt, str);		\
+     } else { \
+-	print_to_mem(DO_STR, fmt, str, NULL);	\
++	usbwb_print_str(DO_STR, fmt, str, NULL);	\
+     }
+ 
+ 
+--- a/fsck_hfs.tproj/dfalib/Scavenger.h
++++ b/fsck_hfs.tproj/dfalib/Scavenger.h
+@@ -48,7 +48,9 @@
+ #endif
+ #include <sys/errno.h>
+ #include <sys/param.h>
++#if !LINUX
+ #include <sys/sysctl.h>
++#endif
+ #include <sys/mount.h>
+ #include <hfs/hfs_mount.h>
+ 

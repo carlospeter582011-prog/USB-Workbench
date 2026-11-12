@@ -1,0 +1,50 @@
+[
+  {
+    "file": "udftools.tar.gz",
+    "bytes": 581756,
+    "sha256": "750dcf5c797765eb42265e0a56d1a99f97f94b7f6f4534263a5410503f0caf59",
+    "url": "https://github.com/pali/udftools/releases/download/2.3/udftools-2.3.tar.gz"
+  },
+  {
+    "file": "util-linux.tar.xz",
+    "bytes": 9612488,
+    "sha256": "6062a1d89b571a61932e6fc0211f36060c4183568b81ee866cf363bce9f6583e",
+    "url": "https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-2.41.2.tar.xz"
+  },
+  {
+    "file": "btrfs-progs.tar.xz",
+    "bytes": 4962800,
+    "sha256": "277d696c9d79713ff5afb53c7efebdcead2e6a6007789b1742ec411f4e4ca229",
+    "url": "https://www.kernel.org/pub/linux/kernel/people/kdave/btrfs-progs/btrfs-progs-v6.17.tar.xz"
+  },
+  {
+    "file": "apfsprogs.tar.gz",
+    "bytes": 211965,
+    "sha256": "f25c2ad7a4ebf5b14cc60bdeb14cf26283152784b0fbffa2c3f5a89b72060c6a",
+    "url": "https://codeload.github.com/linux-apfs/apfsprogs/tar.gz/1bd1c1c2140d13d1b6d2e03379316572bee70aa3"
+  },
+  {
+    "file": "hfsprogs.tar.gz",
+    "bytes": 411205,
+    "sha256": "b01b203a97f9a3bf36a027c13ddfc59292730552e62722d690d33bd5c24f5497",
+    "url": "https://deb.debian.org/debian/pool/non-free/h/hfsprogs/hfsprogs_540.1.linux3.orig.tar.gz"
+  },
+  {
+    "file": "xfsprogs.tar.xz",
+    "bytes": 1563092,
+    "sha256": "5b0f56a81f641326266f762ae8a563b29d95cdbcda83bc7938f68ce122f1edd9",
+    "url": "https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-6.17.0.tar.xz"
+  },
+  {
+    "file": "inih.tar.gz",
+    "bytes": 22145,
+    "sha256": "9c15fa751bb8093d042dae1b9f125eb45198c32c6704cd5481ccde460d4f8151",
+    "url": "https://codeload.github.com/benhoyt/inih/tar.gz/refs/tags/r62"
+  },
+  {
+    "file": "liburcu.tar.bz2",
+    "bytes": 684018,
+    "sha256": "59f36f2b8bda1b7620a7eced2634f26c549444818a8313025a3bb09c0766a61d",
+    "url": "https://lttng.org/files/urcu/userspace-rcu-0.15.2.tar.bz2"
+  }
+]

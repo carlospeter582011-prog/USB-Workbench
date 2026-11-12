@@ -1,0 +1,4 @@
+{
+  "policy": "UTF-8 text source/config/license only; no SDK/cache/builds/native binaries/archives/private reports/signing keys",
+  "nativeDependenciesDownloadedOnRunner": true
+}

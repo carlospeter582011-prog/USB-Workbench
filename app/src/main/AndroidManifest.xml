@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+    <permission android:name="${applicationId}.INTERNAL_USB" android:protectionLevel="signature" />
+    <uses-permission android:name="${applicationId}.INTERNAL_USB" />
+    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- The API33 back opt-in is ignored on older systems, which use onBackPressed instead. -->
+    <application tools:ignore="UnusedAttribute" android:name=".WorkbenchApp" android:extractNativeLibs="true" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:theme="@style/AppTheme" android:supportsRtl="true" android:allowBackup="false" android:fullBackupContent="false" android:dataExtractionRules="@xml/data_extraction_rules" android:usesCleartextTraffic="false" android:enableOnBackInvokedCallback="true">
+        <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden|uiMode">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
+        </activity>
+        <!-- USB permission is the runtime prerequisite; no unrelated radio/network permission is needed.
+             https://developer.android.com/develop/background-work/services/fgs/service-types#connected-device -->
+        <service tools:ignore="ForegroundServicePermission" android:name=".OperationService" android:exported="false" android:foregroundServiceType="connectedDevice|dataSync" />
+    </application>
+</manifest>

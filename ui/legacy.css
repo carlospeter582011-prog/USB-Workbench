@@ -1,0 +1,42 @@
+/* Android6-era WebView fallbacks, activated by the ES5 capability helper. */
+.legacy-webview{background:#0b1019}
+.legacy-webview .brandmark,.legacy-webview .tool-icon,.legacy-webview .usb-shell{display:-webkit-flex;display:flex;align-items:center;justify-content:center}
+.legacy-webview .brandmark{margin-right:11px}
+.legacy-webview .tools-grid{display:-webkit-flex;display:flex;flex-wrap:wrap;margin:-6px}
+.legacy-webview .tool-card{width:calc(50% - 12px);margin:6px;flex:none}
+.legacy-webview .tool-card .arrow{right:14px}
+.legacy-webview .drive-art{margin-left:10px}
+.legacy-webview .status-dot{margin-right:7px}
+.legacy-webview nav{left:0;right:0}
+.legacy-webview .overlay{top:0;left:0;right:0;bottom:0}
+.legacy-webview .close{right:19px}
+.legacy-webview .sheet .actions{display:block}
+.legacy-webview .sheet .actions button{display:block;width:100%;margin-top:10px}
+.legacy-webview .spec{display:flex;margin-left:-4px;margin-right:-4px}
+.legacy-webview .spec div{width:50%;margin:4px}
+.legacy-webview .row-card .tool-icon,.legacy-webview .learn-card .tool-icon{margin-right:14px}
+.legacy-webview .row-card .num{margin-right:14px}
+.legacy-webview .steps li{padding-left:43px}
+.legacy-webview .steps li:before{left:0;display:flex;align-items:center;justify-content:center}
+.legacy-webview .steps li:after{left:13px}
+.legacy-webview .tabs button{margin-right:8px}
+.legacy-webview .file-actions button{margin:4px}
+.legacy-webview button:focus,.legacy-webview input:focus,.legacy-webview select:focus{outline:2px solid #5de4bc}
+.legacy-webview .file-name,.legacy-webview #source-name,.legacy-webview .result,.legacy-webview .copy{word-wrap:break-word;overflow-wrap:break-word}
+[dir=rtl].legacy-webview .tool-card .arrow{left:14px;right:auto}
+[dir=rtl].legacy-webview .close{left:19px;right:auto}
+[dir=rtl].legacy-webview .status-dot{margin-left:7px;margin-right:0}
+[dir=rtl].legacy-webview .steps li{padding-left:0;padding-right:43px}
+[dir=rtl].legacy-webview .steps li:before{left:auto;right:0}
+[dir=rtl].legacy-webview .steps li:after{left:auto;right:13px}
+[dir=rtl].legacy-webview .row-card .tool-icon,[dir=rtl].legacy-webview .learn-card .tool-icon,[dir=rtl].legacy-webview .row-card .num{margin-left:14px;margin-right:0}
+[dir=rtl].legacy-webview .tabs button{margin-left:8px;margin-right:0}
+@media(min-width:650px){.legacy-webview .tool-card{width:calc(33.333% - 12px)}}
+.legacy-webview nav{padding:10px 10px 12px}
+.legacy-webview .primary,.legacy-webview .secondary,.legacy-webview h1{font-weight:600}
+
+.legacy-webview .group-toggle{text-align:left}.legacy-webview .group-count,.legacy-webview .group-chevron{margin-left:12px}.legacy-webview .drive-symbol{margin-left:16px}.legacy-webview .group-tools .tools-grid{margin-right:-12px}.legacy-webview .home-footer .text-button{margin-right:12px}[dir=rtl].legacy-webview .group-toggle{text-align:right}[dir=rtl].legacy-webview .group-count,[dir=rtl].legacy-webview .group-chevron{margin-left:0;margin-right:12px}[dir=rtl].legacy-webview .drive-symbol{margin-left:0;margin-right:16px}[dir=rtl].legacy-webview .group-tools .tools-grid{margin-right:0;margin-left:-12px}
+
+.legacy-webview .tools-grid{display:block;margin:0}.legacy-webview .group-tools .tools-grid{margin:0}.legacy-webview .tool-row .tool-card{width:auto;margin:0;flex:1;min-height:84px}.legacy-webview .pin-button{margin:0 5px}.legacy-webview .learning-shortcut{text-align:left}[dir=rtl].legacy-webview .learning-shortcut{text-align:right}.legacy-webview .pinned-heading>svg{margin-right:10px}[dir=rtl].legacy-webview .pinned-heading>svg{margin-right:0;margin-left:10px}
+
+.legacy-webview .choice-trigger,.legacy-webview .choice-option{text-align:left}[dir=rtl].legacy-webview .choice-trigger,[dir=rtl].legacy-webview .choice-option{text-align:right}.legacy-webview .choice-overlay{background:rgba(0,0,0,.75)}.legacy-webview .choice-sheet{max-height:85vh}.legacy-webview .choice-mark{margin-left:16px}[dir=rtl].legacy-webview .choice-mark{margin-left:0;margin-right:16px}

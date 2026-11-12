@@ -1,0 +1,63 @@
+--- a/apfsck/apfsck.h
++++ b/apfsck/apfsck.h
+@@ -29,10 +29,16 @@
+ 
+ #include <sys/mman.h>
+ #include <unistd.h>
++#include <errno.h>
+ #include <apfs/raw.h>
+ #include <apfs/types.h>
+ 
+ /* Forwards the mmap() call to the proper device of a fusion drive */
++static inline void *usbwb_readmap(size_t length,int fd,u64 offset){
++ if(!length||length>32U*1024*1024||offset>0x7fffffffffffffffULL){errno=EINVAL;return MAP_FAILED;}
++ void *memory=mmap(NULL,length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);if(memory==MAP_FAILED)return memory;
++ size_t at=0;while(at<length){ssize_t n=pread(fd,(char*)memory+at,length-at,(off_t)(offset+at));if(n<0&&errno==EINTR)continue;if(n<=0){munmap(memory,length);errno=EIO;return MAP_FAILED;}at+=n;}return memory;
++}
+ static inline void *apfs_mmap(void *addr, size_t length, int prot, int flags, u64 offset)
+ {
+ 	/*
+@@ -43,9 +49,9 @@
+ 		if (fd_tier2 == -1)
+ 			report(NULL, "Address in missing tier 2 device.");
+ 		offset -= APFS_FUSION_TIER2_DEVICE_BYTE_ADDR;
+-		return mmap(addr, length, prot, flags, fd_tier2, (off_t)offset);
++		return usbwb_readmap(length,fd_tier2,offset);
+ 	}
+-	return mmap(addr, length, prot, flags, fd_main, (off_t)offset);
++	return usbwb_readmap(length,fd_main,offset);
+ }
+ 
+ /* Forwards the pread() call to the proper device of a fusion drive */
+--- a/apfsck/super.c
++++ b/apfsck/super.c
+@@ -75,8 +75,7 @@
+ 	 */
+ 	bsize_tmp = APFS_NX_DEFAULT_BLOCK_SIZE;
+ 
+-	msb_raw = mmap(NULL, bsize_tmp, PROT_READ, MAP_PRIVATE,
+-		       fd_main, APFS_NX_BLOCK_NUM * bsize_tmp);
++	msb_raw = usbwb_readmap(bsize_tmp, fd_main, APFS_NX_BLOCK_NUM * bsize_tmp);
+ 	if (msb_raw == MAP_FAILED)
+ 		system_error();
+ 
+@@ -89,8 +88,7 @@
+ 	if (sb->s_blocksize != bsize_tmp) {
+ 		munmap(msb_raw, bsize_tmp);
+ 
+-		msb_raw = mmap(NULL, sb->s_blocksize, PROT_READ, MAP_PRIVATE,
+-			       fd_main, APFS_NX_BLOCK_NUM * sb->s_blocksize);
++		msb_raw = usbwb_readmap(sb->s_blocksize, fd_main, APFS_NX_BLOCK_NUM * sb->s_blocksize);
+ 		if (msb_raw == MAP_FAILED)
+ 			system_error();
+ 	}
+@@ -119,8 +117,7 @@
+ 	for (bno = base; bno < base + blocks; ++bno) {
+ 		struct apfs_nx_superblock *current;
+ 
+-		current = mmap(NULL, sb->s_blocksize, PROT_READ, MAP_PRIVATE,
+-			       fd_main, bno * sb->s_blocksize);
++		current = usbwb_readmap(sb->s_blocksize, fd_main, bno * sb->s_blocksize);
+ 		if (current == MAP_FAILED)
+ 			system_error();
+ 

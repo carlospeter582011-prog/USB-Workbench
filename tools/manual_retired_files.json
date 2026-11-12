@@ -1,0 +1,72 @@
+{
+  "id": "tool-files",
+  "name": "Removed File manager — previous results kept",
+  "cases": [
+    {
+      "id": "tool-files-walkthrough-v2",
+      "title": "Try this tool step by step",
+      "guided": false,
+      "need": "Test pack: small/ folder; no USB needed.",
+      "why": "Checks that copying, renaming and deleting affect only the chosen test files.",
+      "steps": [
+        "Open Android Files. Extract USB-Test-Files.zip in Downloads. Keep the original extracted folder unchanged; use copies for editing.",
+        "In USB Workbench, open Home → File manager. Choose the small folder inside USB-Test-Files and allow access.",
+        "Open hello.txt. It must say: USB Workbench manual test. Go back and copy it to a new folder called TestOutput.",
+        "Rename ONLY the copied file to renamed.txt. Open it again; the words must be unchanged.",
+        "Delete ONLY renamed.txt, read the confirmation and confirm. Return to the original small folder: hello.txt must still exist."
+      ],
+      "expected": "Copied file opens correctly; rename works; delete removes only the copy; the original stays unchanged.",
+      "extra": "",
+      "retired": true
+    },
+    {
+      "id": "tool-files-0",
+      "title": "Tool-specific scenario 1",
+      "steps": "Create nestedtestfolders; copy/open/rename/delete onlyownedfiles. Test traversal, revokedgrant, missingfile and source=destination.",
+      "expected": "Record exact inputs, independent comparison, output and any defect. Pass only when the stated behavior and published limits are confirmed.",
+      "guided": false,
+      "retired": true
+    },
+    {
+      "id": "tool-files-1",
+      "title": "Normal supported workflow",
+      "steps": "Read the tool's supported scope below. Follow: Choose the phone or USB location in Android’s picker and allow access to the intended folder. → Open folders to inspect files. Use the file actions for copy, rename, checksum or delete. → Check the destination before copying. Read delete confirmations carefully; deletion has no undo here.. Use only owned fixtures/spares and independently compare the result.",
+      "expected": "The observed result matches: Files saved in the folder you chose. If Android cannot show an NTFS/ext USB, try the separate direct read-only browser.",
+      "guided": false,
+      "retired": true
+    },
+    {
+      "id": "tool-files-2",
+      "title": "Invalid input / permission / capacity",
+      "steps": "Try a truncated or unsupported source, denied permission, missing target, and insufficient destination space as applicable. Preserve hashes of all originals.",
+      "expected": "Clear, localized refusal; no unrelated edits/deletes, no crash and no false success.",
+      "guided": false,
+      "retired": true
+    },
+    {
+      "id": "tool-files-3",
+      "title": "Cancel and recover",
+      "steps": "Cancel during each reachable phase using disposable media/owned outputs. Reopen Activity/details and retry only after completion with a newly reviewed target.",
+      "expected": "No duplicate jobs, automatic retry, unrelated cleanup, stale target write or false completion. Record any partial output.",
+      "guided": false,
+      "retired": true
+    },
+    {
+      "id": "tool-files-4",
+      "title": "Arabic / English / accessibility",
+      "steps": "Open this tool in both languages; enlargefont; inspect controls/options/warnings/progress/results on phone andtablet withTalkBack.",
+      "expected": "Readable text, correctRTL, usable controls and consistent selected-language reports.",
+      "guided": false,
+      "retired": true
+    }
+  ],
+  "scope": [
+    "Use Android’s storage picker to grant access to one folder. Browse subfolders, copy multiple files, rename, delete and calculate SHA-256. Filesystem support depends on Android and the storage provider. NTFS/ext drives that Android cannot mount need a separate driver, which is not bundled. Existing names are never overwritten during copy.",
+    "امنح الوصول لمجلد عبر منتقي تخزين أندرويد. تصفح المجلدات الفرعية وانسخ عدة ملفات وأعد تسميتها واحذفها واحسب SHA-256. دعم أنظمة الملفات يعتمد على أندرويد ومزوّد التخزين. وحدات NTFS/ext التي لا يقرأها أندرويد تحتاج محركاً منفصلاً غير مضمن. النسخ لا يستبدل ملفات تحمل الاسم نفسه."
+  ],
+  "impact": [
+    "Browsing reads files; copy/rename/delete can change the selected folder. Deletion is permanent.",
+    "التصفح يقرأ الملفات؛ النسخ والتسمية والحذف قد تغيّر المجلد. الحذف نهائي."
+  ],
+  "retired": true
+}

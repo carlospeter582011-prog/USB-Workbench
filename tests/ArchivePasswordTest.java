@@ -1,0 +1,6 @@
+package org.usbworkbench;
+import java.io.*;import java.util.*;
+public class ArchivePasswordTest{
+ public static void main(String[] args)throws Exception{int n=0;File libs=new File("app/src/main/jniLibs/arm64-v8a");try(OpticalImage.Source s=ArchiveTest.source(new File("artifacts/archive-fixtures/password.zip"))){for(String password:new String[]{"","wrong"}){try{ArchiveTools.scanPassword(libs,s,1048576,(a,b)->{},()->false,password);throw new AssertionError("Wrong password accepted");}catch(IOException e){if(!e.getMessage().startsWith("ARCHIVE_ENGINE_FAILED")||e.getMessage().contains("fixture-only"))throw e;n++;}}
+ ArchiveTools.Manifest m=ArchiveTools.scanPassword(libs,s,1048576,(a,b)->{},()->false,"fixture-only");if(m.entries.size()!=1||m.total!=1300)throw new AssertionError("manifest");n++;ArchiveTools.MemoryFile output=new ArchiveTools.MemoryFile();Map<String,String> hashes=ArchiveTools.extractPassword(libs,s,m,new WimFiles.Store(){public void capacity(long x){}public WimFiles.RandomFile create(String name){return output;}},(a,b)->{},()->false,"fixture-only");if(!new String(output.data(),"UTF-8").equals("Owned encrypted test data\n".repeat(50))||hashes.size()!=1)throw new AssertionError("decrypted bytes");n++;}
+ System.out.println("PASS: "+n+" actual encrypted ZIP correct/missing/wrong password and extracted bytes checks");}}

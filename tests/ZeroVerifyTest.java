@@ -1,0 +1,7 @@
+package org.usbworkbench;
+import java.io.*;import java.util.*;
+public final class ZeroVerifyTest{
+ static int checks;static void yes(boolean b){if(!b)throw new AssertionError();checks++;}
+ static final class Disk implements BlockDevice{final byte[] data=new byte[64*512];int writes,reads;boolean ignore;public int blockSize(){return 512;}public long blockCount(){return 64;}public void read(long at,byte[] b,int n){reads++;System.arraycopy(data,(int)at*512,b,0,n);}public void write(long at,byte[] b,int n){writes++;if(!ignore)System.arraycopy(b,0,data,(int)at*512,n);}public void sync(){}public void close(){}}
+ public static void main(String[] args)throws Exception{Disk d=new Disk();yes(DiskTools.verifyZero(d,(a,b)->{})==d.data.length);yes(d.writes==0);d.data[18*512+17]=1;try{DiskTools.verifyZero(d,(a,b)->{});throw new AssertionError();}catch(IOException e){yes(e.getMessage().equals("ZERO_MISMATCH LBA=18 BYTE=17"));}yes(d.writes==0);DiskTools.wipe(d,(a,b)->{});yes(d.writes==2&&d.reads>2);yes(DiskTools.verifyZero(d,(a,b)->{})==d.data.length);d.data[32767]=1;d.ignore=true;try{DiskTools.wipe(d,(a,b)->{});throw new AssertionError();}catch(IOException e){yes(e.getMessage().equals("ZERO_MISMATCH LBA=63 BYTE=511"));}int writes=d.writes;try{DiskTools.wipe(d,(a,b)->{throw new IOException("CANCELLED");});throw new AssertionError();}catch(IOException e){yes(e.getMessage().equals("CANCELLED")&&d.writes==writes);}System.out.println("PASS: "+checks+" zero verification/read-only/full wipe readback/ignored-write/cancel assertions");}
+}

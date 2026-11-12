@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="theme-color" content="#0b1019"><title>USB Workbench</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><div class="brand"><span class="brandmark" id="brandicon"></span><div><strong>USB <span>Workbench</span></strong><small id="tagline"></small></div></div><button id="lang" class="lang" aria-label="Switch language">العربية</button></header>
+<main id="content"></main><section id="jobpanel" aria-live="polite"></section>
+<nav id="nav" aria-label="Main navigation"></nav>
+<div id="overlay" class="overlay" hidden><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><div class="sheet-handle"></div><button class="close" data-action="close" aria-label="Close">×</button><div id="sheetbody"></div></section></div>
+<div id="choiceoverlay" class="choice-overlay" hidden><section class="choice-sheet" role="dialog" aria-modal="true" aria-labelledby="choice-title"><div class="choice-head"><h2 id="choice-title"></h2><button id="choice-close" class="text-button" data-action="closeChoices">Done</button></div><input id="choice-search" class="search" type="search" aria-labelledby="choice-title"><div id="choice-list" role="listbox" aria-labelledby="choice-title"></div></section></div>
+<div id="toast" role="status"></div>
+<script src="compat.js"></script><script src="catalog.js"></script><script src="app.js"></script>
+</body></html>

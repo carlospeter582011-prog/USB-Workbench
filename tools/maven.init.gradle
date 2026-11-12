@@ -1,0 +1,5 @@
+settingsEvaluated { settings ->
+    settings.pluginManagement.repositories.clear()
+    settings.pluginManagement.repositories.maven { url = uri('http://127.0.0.1:18764/google'); allowInsecureProtocol = true }
+    settings.pluginManagement.repositories.maven { url = uri('http://127.0.0.1:18764/maven'); allowInsecureProtocol = true }
+}

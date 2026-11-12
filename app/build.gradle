@@ -1,0 +1,43 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'org.usbworkbench'
+    compileSdk 36
+    defaultConfig { applicationId 'org.usbworkbench'; minSdk 23; targetSdk 36; versionCode (System.getenv('CI_VERSION_CODE') ?: '20').toInteger(); versionName (System.getenv('CI_VERSION_NAME') ?: '0.16.1') }
+    signingConfigs {
+        ciRelease {
+            if (System.getenv('ANDROID_KEYSTORE_PATH')) {
+                storeFile file(System.getenv('ANDROID_KEYSTORE_PATH'))
+                storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        release {
+            if (System.getenv("ANDROID_KEYSTORE_PATH")) signingConfig signingConfigs.ciRelease
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        qa {
+            initWith release
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
+        }
+    }
+    packaging { jniLibs { useLegacyPackaging = true; keepDebugSymbols += ["**/*.so"] } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+
+// Validate the unsigned release bundle with the same official bundletool used by AGP.
+tasks.register('validateReleaseBundle') {
+    dependsOn 'bundleRelease'
+    doLast {
+        com.android.tools.build.bundletool.commands.ValidateBundleCommand.builder()
+            .setBundlePath(layout.buildDirectory.file('outputs/bundle/release/app-release.aab').get().asFile.toPath())
+            .build().execute()
+    }
+}
+
+dependencies { implementation 'org.tukaani:xz:1.12' }
