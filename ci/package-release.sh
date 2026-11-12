@@ -11,7 +11,12 @@ mkdir -p .downloads/ci-bin
 printf '#!/bin/sh\nexec readelf "$@"\n' > .downloads/ci-bin/llvm-readelf
 chmod +x .downloads/ci-bin/llvm-readelf
 PATH="$PWD/.downloads/ci-bin:$PATH" python3 tools/audit_native.py
-sdkmanager "platforms;android-36" "build-tools;35.0.0" >/dev/null
+sdk_manager="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+if [ ! -x "$sdk_manager" ]; then
+  sdk_manager="$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | sort -V | tail -n 1)"
+fi
+test -x "$sdk_manager"
+"$sdk_manager" "platforms;android-36" "build-tools;35.0.0" >/dev/null
 printf 'sdk.dir=%s\n' "$ANDROID_HOME" > local.properties
 # Download the pinned Gradle wrapper bootstrap on GitHub, not in the source upload.
 curl --fail --location --retry 3 --silent --show-error https://raw.githubusercontent.com/gradle/gradle/v8.11.1/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
