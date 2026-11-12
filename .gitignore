@@ -10,7 +10,9 @@ local.properties
 *.so
 *.jar
 *.zip
-*.tar.*
+*.tar.gz
+*.tar.xz
+*.tar.bz2
 *.tgz
 __pycache__/
 app/src/main/assets/native-corresponding-source.zip
