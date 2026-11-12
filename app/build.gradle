@@ -2,7 +2,7 @@ plugins { id 'com.android.application' }
 android {
     namespace 'org.usbworkbench'
     compileSdk 36
-    defaultConfig { applicationId 'org.usbworkbench'; minSdk 23; targetSdk 36; versionCode (System.getenv('CI_VERSION_CODE') ?: '20').toInteger(); versionName (System.getenv('CI_VERSION_NAME') ?: '0.16.1') }
+    defaultConfig { applicationId 'org.usbworkbench'; minSdk 23; targetSdk 36; versionCode = Integer.parseInt(System.getenv('CI_VERSION_CODE') ?: '20'); versionName = (System.getenv('CI_VERSION_NAME') ?: '0.16.1') }
     signingConfigs {
         ciRelease {
             if (System.getenv('ANDROID_KEYSTORE_PATH')) {
