@@ -68,9 +68,12 @@
   },
   {
     "file": "native/sources/ntfs3g.tgz",
-    "url": "https://tuxera.com/opensource/ntfs-3g_ntfsprogs-2026.9.28.tgz",
+    "url": "https://download.tuxera.com/opensource/ntfs-3g_ntfsprogs-2026.9.28.tgz",
     "sha256": "350d9415c59f7c3fa74e23985ad2d56423c6a168337368f672e2e362d8f295c8",
-    "bytes": 1343029
+    "bytes": 1343029,
+    "mirrors": [
+      "https://mirrors.omnios.org/ntfs-3g/ntfs-3g_ntfsprogs-2026.9.28.tgz"
+    ]
   },
   {
     "file": "native/sources/udftools.tar.gz",

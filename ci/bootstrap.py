@@ -12,7 +12,11 @@ def fetch(url,dst,digest=None,algorithm='sha256'):
  return dst
 (R/'artifacts').mkdir(exist_ok=True);(R/'.downloads/native-src').mkdir(parents=True,exist_ok=True)
 for entry in json.loads((R/'ci/dependencies.json').read_text()):
- path=fetch(entry['url'],R/entry['file'])
+ for url in [entry['url'],*entry.get('mirrors',[])]:
+  try:path=fetch(url,R/entry['file']);break
+  except subprocess.CalledProcessError:
+   (R/entry['file']).unlink(missing_ok=True)
+   if url==[entry['url'],*entry.get('mirrors',[])][-1]:raise
  from source_integrity import verify
  verify(path,entry)
  if path.parent.name=='sources' and path.name!='f2fs-tools.tar.gz':

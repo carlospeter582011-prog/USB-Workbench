@@ -26,3 +26,6 @@ Original GPL3+ wim_tree.c is merged into each existing imagex executable: build_
 
 
 0.16 extra formatters: scripts/build_udf.sh, build_hfs.py, build_apfs.py, build_extra_dependencies.py (modern util-linux UUID/blkid and Btrfs), then build_xfs.py. Pinned provenance: sources/extra-engines.json. All tools target API23/four ABIs/16KiB ELF alignment. hfs/apfs exact source patches are in native/patches; original compatibility headers handle Android APIs. XFS explicitly includes endian.h and preserves the upstream CRC self-test. Its recursive top-level targets build sequentially to avoid dependency-file races. See docs/EXPANDED_ENGINES.md for format limits, dependencies, license obligations and manual gates.
+
+
+GitHub/Linux rebuild: ci/bootstrap.py --native fetches pinned source/NDK dependencies and sets USB_NDK_ROOT/USB_LLVM_BIN, then ci/build-native.sh <ABI> builds the full engine set using official NDK r30 on Linux x86_64. The full dependency manifest/integrity verifier and native recipe accompany this source export. See ci/ in the text-only GitHub repository.

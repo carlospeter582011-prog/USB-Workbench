@@ -6,6 +6,7 @@ files=['app/src/main/java/org/usbworkbench/IsoPersistence.java','app/src/main/ja
 files += ['app/src/main/java/org/usbworkbench/OutputNames.java','app/src/main/java/org/usbworkbench/WimPaths.java','native/sources/extra-engines.json','native/hfs_android.h','native/util_android.h','native/xfs_android.h','native/patches/hfs-android.patch','native/patches/apfs-android.patch','scripts/build_udf.sh','scripts/build_hfs.py','scripts/build_apfs.py','scripts/build_extra_dependencies.py','scripts/build_xfs.py','app/src/main/java/org/usbworkbench/ExtraFormat.java','app/src/main/java/org/usbworkbench/ChdStored.java','app/src/main/java/org/usbworkbench/AdvancedDiskTools.java']
 import json
 files += ['native/sources/'+x['file'] for x in json.loads((root/'native/sources/extra-engines.json').read_text())]
+files += ['ci/bootstrap.py','ci/source_integrity.py','ci/dependencies.json','ci/build-native.sh']
 files.extend(str(p.relative_to(root)) for p in sorted((root/'LICENSES').glob('*.txt')))
 with zipfile.ZipFile(root/'app/src/main/assets/native-corresponding-source.zip','w',compression=zipfile.ZIP_STORED) as out:
  for name in files:
